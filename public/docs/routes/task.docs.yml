@@ -1,0 +1,160 @@
+definitions:
+    Task:
+        type: object
+        required:
+            - projectId
+            - description
+            - development
+            - testing
+            - certainty
+        properties:
+            _id:
+                type: string
+                description: Auto-generated
+            projectId:
+                type: string
+                description: Project Id
+            feature:
+                type: string
+                description: A summary of the feature under which the task falls
+            description:
+                type: string
+                description: A summary about the task
+            research:
+                type: number
+                description: Number of hours for research e.g. 1.5
+            planning:
+                type: number
+                description: Number of hours for planning e.g. 1.5
+            development:
+                type: number
+                description: Number of hours for development e.g. 1.5
+            testing:
+                type: number
+                description: Number of hours for testing e.g. 1.5
+            stabilization:
+                type: number
+                description: Number of hours for stabilization e.g. 1.5
+            certainty:
+                type: number
+                description: 
+            adjusted:
+                type: number
+                description: Total number of hours after adjustment
+            comment:
+                type: string      
+
+parameters:
+    id:
+        in: path
+        type: string
+        required: true
+        name: _id
+        description: Task Id
+    
+    projectId:
+        in: path
+        type: string
+        required: true
+        name: projectId
+        description: Project Id
+
+    body:    
+        in: body
+        type: object
+        required: true
+        name: body
+        description: Task object
+        schema:
+            $ref: '#/definitions/Task'      
+
+paths:
+    /api/task:
+        post:
+            tags:
+                - Task
+            summary: Create task
+            description: This allows creation of a new task
+            consumes: application/json
+            produces: application/json
+            parameters:
+                - $ref: '#/parameters/body'
+            security:
+                - AuthService:
+                    - write
+                    - read
+            responses:
+                200:
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Task'
+                500:
+                    description: internal server error
+
+    /api/task/{projectId}:
+        get:
+            tags:
+                - Task
+            summary: Gets all tasks that are attached to a project
+            produces: application/json
+            parameters:
+                - $ref: '#/parameters/projectId'
+            security:
+                - AuthService:
+                    - write
+                    - read
+            responses:
+                200:
+                    description: A list of all tasks attached to a given project
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Task'
+                404:
+                    description: No tasks found
+                500:
+                    description: internal server error
+
+    /api/task/{_id}:
+        put:
+            tags:
+                - Task
+            summary: Update a task
+            description: Use this endpoint if you want to update a task
+            produces: application/json
+            security:
+                - AuthService:
+                    - write
+                    - read
+            
+            parameters:
+                - $ref: '#/parameters/id'
+                - $ref: '#/parameters/body'
+
+            responses:
+                200:
+                    description: Returns the task that has been updated
+                    schema:
+                        $ref: '#/definitions/Task'
+
+                404:
+                    description: Task not found
+
+                500:
+                    description: internal server error
+        delete:
+            tags:
+                - Task
+            summary: Deletes a task
+            produces: application/json
+            security:
+                - AuthService:
+                    - write
+                    - read
+            parameters:
+                - $ref: '#/parameters/id'
+            responses:
+                200:
+                    description: Task deleted successfully
+                500:
+                    description: internal server error

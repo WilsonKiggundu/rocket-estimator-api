@@ -1,0 +1,139 @@
+definitions:
+  Meeting:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Auto-generated
+      title:
+        type: string
+        description: A brief description about the meeting
+      project:
+        type: string
+        description: Project to which the meeting is attached
+      quantity:
+        type: integer
+        description: Number of meetings of this kind
+      duration:
+        type: number
+        description: Duration in hours for each meeting
+      certainty:
+        type: number
+        description: Level of confidence that the duration is correct
+
+parameters:
+    meeting_id:
+        in: path
+        type: string
+        required: true
+        name: _id
+        description: Meeting Id
+    
+    projectId:
+        in: path
+        type: string
+        required: true
+        name: projectId
+        description: Project Id
+
+    meeting_body:    
+        in: body
+        type: object
+        required: true
+        name: body
+        description: Meeting object
+        schema:
+            $ref: '#/definitions/Meeting' 
+
+paths:
+  /api/meeting:
+      post:
+          tags:
+              - Meeting
+          summary: Create meeting
+          description: This allows creation of a new meeting
+          consumes:
+              - application/json
+          produces: 
+              - application/json            
+          parameters:
+              - $ref: '#/parameters/meeting_body'
+          security:
+              - AuthService:
+                  - write
+                  - read
+
+          responses:
+              200:
+                  description: Meeting has been added successfully
+                  schema:
+                      $ref: '#/definitions/Meeting'
+              500:
+                  description: internal server error
+
+  /api/meeting/{projectId}:
+      get:
+          tags:
+              - Meeting
+          summary: Get all meetings
+          description: Returns a list of all meetings scheduled for a given project
+          produces: application/json
+          parameters:
+            - $ref: '#/parameters/projectId'
+          security:
+              - AuthService:
+                  - write
+                  - read
+          responses:
+              200:
+                  description: A list of project meetings
+                  schema:
+                      type: array
+                      items:
+                          $ref: '#/definitions/Meeting'
+              500:
+                  description: internal server error
+
+  /api/meeting/{_id}:
+    put:
+      tags:
+          - Meeting
+      summary: Update a meeting
+      produces: application/json
+      parameters:
+          - $ref: '#/parameters/meeting_id'
+          - $ref: '#/parameters/meeting_body'
+      security:
+          - AuthService:
+              - write
+              - read
+
+      responses:
+          200:
+              description: Meeting updated successfully
+              schema:
+                  $ref: '#/definitions/Meeting'
+          404:
+              description: Meeting not found
+          500:
+              description: internal server error
+    delete:
+        tags:
+            - Meeting
+        summary: Delete a meeting
+        produces: application/json
+        parameters:
+            - $ref: '#/parameters/meeting_id'
+                
+        security:
+            - AuthService:
+                - write
+                - read
+                
+        responses:
+            200:
+                description: Meeting deleted successfully
+            404:
+                description: Meeting not found
+            500:
+                description: internal server error

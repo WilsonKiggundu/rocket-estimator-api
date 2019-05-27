@@ -1,0 +1,122 @@
+definitions:
+  Person:
+    type: object
+    required:
+      - firstname
+      - lastname
+      - email
+    properties:        
+      _id:
+        type: string
+        description: Auto-generated
+      name:
+        type: string
+        description: Person's name
+
+parameters:
+    person_id:
+        in: path
+        name: id
+        description: Person Id
+        required: true
+        type: string
+
+    person_body:
+        in: body
+        name: body
+        description: Person object that needs to be updated
+        required: true
+        type: object
+        schema:
+            $ref: '#/definitions/Person'
+
+paths:
+    /api/person:
+        post:
+            tags:
+                - Person
+            summary: Create person
+            description: This allows creation of a new person
+            consumes:
+                - application/json
+            produces: 
+                - application/json            
+            parameters:
+                - $ref: '#/parameters/person_body'
+
+            security:
+                - AuthService:
+                    - write
+                    - read
+
+            responses:
+                200:
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Person'
+                500:
+                    description: internal server error
+        get:
+            tags:
+                - Person
+            summary: Get all persons
+            description: Returns a list of all persons
+            produces: application/json
+                
+            security:
+                - AuthService:
+                    - write
+                    - read
+            responses:
+                200:
+                    description: A list of persons
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Person'
+                500:
+                    description: internal server error
+
+    /api/person/{_id}:
+        put:
+            tags:
+                - Person
+            summary: Update a person
+            produces: application/json
+            parameters:
+                - $ref: '#/parameters/person_id'
+                - $ref: '#/parameters/person_body'
+                
+            security:
+                - AuthService:
+                    - write
+                    - read
+
+            responses:
+                200:
+                    description: Person updated successfully
+                    schema:
+                        $ref: '#/definitions/Person'
+                404:
+                    description: Person not found
+                500:
+                    description: internal server error
+        delete:
+            tags:
+                - Person
+            summary: Delete a person
+            produces: application/json
+                
+            security:
+                - AuthService:
+                    - write
+                    - read
+            parameters:
+                - $ref: '#/parameters/person_id'
+            responses:
+                200:
+                    description: Person deleted successfully
+                404:
+                    description: Person not found
+                500:
+                    description: internal server error
