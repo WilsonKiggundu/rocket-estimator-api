@@ -47,6 +47,10 @@ app.get('/docs/redocs', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'docs', 'index.html'));
 });
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'docs', 'index.html'));
+});
+
 app.use(passport.initialize());
 app.use(passport.session());
 
