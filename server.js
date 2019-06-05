@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import swaggerJsDoc from 'swagger-jsdoc';
 import path from 'path';
@@ -12,8 +13,14 @@ import router from './routes';
 import settings from './settings';
 import db from './lib/db';
 
-
 const app = express();
+
+const corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 const accessLogStream = rfs('access.log', {
   interval: '1d',
