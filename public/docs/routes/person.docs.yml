@@ -2,16 +2,21 @@ definitions:
   Person:
     type: object
     required:
-      - firstname
-      - lastname
+      - name
       - email
+      - roles
     properties:        
-      _id:
-        type: string
-        description: Auto-generated
       name:
         type: string
         description: Person's name
+      email:
+        type: string
+        description: Person's email address
+      roles:
+        type: array
+        items:
+            enum: ['PM', 'DEV', 'ADV']
+        description: Person's roles
 
 parameters:
     person_id:

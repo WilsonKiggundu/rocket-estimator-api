@@ -1,33 +1,41 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
-module.exports = model(
+module.exports = mongoose.model(
   'Project',
-  Schema(
-    {
-      name: {
-        type: String,
-        required: true,
-      },
-
-      developer: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'Person',
-      },
-
-      manager: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'Person',
-      },
-      consultant: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'Person',
-      },
+  mongoose.Schema({
+    name: {
+      type: String,
+      required: true,
     },
-    {
-      timestamps: true,
+
+    description: {
+      type: String,
+      required: false,
     },
-  ),
+
+    client: {
+      type: String,
+      required: true,
+    },
+
+    developer: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'Person',
+    },
+
+    manager: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'Person',
+    },
+
+    consultant: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'Person',
+    },
+  }, {
+    timestamps: true,
+  }),
 );
