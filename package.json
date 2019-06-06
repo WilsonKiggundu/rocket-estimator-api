@@ -31,6 +31,7 @@
     "eslint-plugin-mocha": "^5.3.0",
     "express": "^4.16.4",
     "express-swagger-generator": "^1.1.14",
+    "jsonwebtoken": "^8.5.1",
     "mocha": "^6.1.4",
     "mock-express-request": "^0.2.2",
     "mock-express-response": "^0.2.2",

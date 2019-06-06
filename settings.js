@@ -1,5 +1,6 @@
 export default {
   BASE_URL: 'localhost',
+  AUTH_SERVICE: 'https://authservice-test.laboremus.no',
   PORT: process.env.PORT || 3000,
   database:
     process.env.ENV === 'Test'
