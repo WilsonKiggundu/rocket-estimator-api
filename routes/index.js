@@ -13,5 +13,5 @@ module.exports = (app) => {
   taskRoutes(app);
   componentRoutes(app);
   featureRoutes(app);
-  interviewRoutes(app)
+  interviewRoutes(app);
 };

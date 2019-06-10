@@ -34,7 +34,7 @@ exports.create = async (req, res) => {
 };
 
 // search component
-exports.search = async (req, res) => {
+exports.read = async (req, res) => {
 
   try {
     await Interview.find()
