@@ -13,7 +13,7 @@ export const Interview = mongoose.model(
             required: true
         },
 
-        interviewee: {
+        interviewer: {
             type: String,
             required: true
         },
