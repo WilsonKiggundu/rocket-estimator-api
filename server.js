@@ -6,7 +6,6 @@ import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
 import path from 'path';
-import passport from 'passport';
 import morgan from 'morgan';
 import rfs from 'rotating-file-stream';
 import swaggerOptions from './public/docs/swagger.options';
@@ -14,10 +13,12 @@ import router from './routes';
 import settings from './settings';
 import db from './lib/db';
 
+require('dotenv').config();
+
 const app = express();
-app.use(passport.initialize());
-app.use(passport.session());
-require('./config/passport');
+// app.use(passport.initialize());
+// app.use(passport.session());
+// require('./config/passport');
 
 // add swagger documentation
 const swaggerSpec = swaggerJsDoc(swaggerOptions);
@@ -67,10 +68,10 @@ app.use(bodyParser.json());
 router(app);
 
 // mongo database connection
-db.connect(settings.database)
+db.connect(process.env.DB_CONNECTION)
   .then(() => {
-    app.listen(settings.PORT, () => {
-      console.log(`Server running on port ${settings.PORT}...`);
+    app.listen(process.env.PORT, () => {
+      console.log(`Server running on port ${process.env.PORT}...`);
     });
   })
   .catch((err) => {

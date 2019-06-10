@@ -2,7 +2,7 @@ import {
   Types
 } from 'mongoose';
 import {
-  Project
+  Feature
 } from '../models/project.model';
 
 exports.create = async (req, res) => {
@@ -15,19 +15,19 @@ exports.create = async (req, res) => {
   if (!req.body.name) {
     res.status(500);
     return res.send({
-      message: 'Project name is missing.'
+      message: 'Feature name is missing.'
     });
   }
 
   if (typeof req.body.name !== 'string') {
     res.status(500);
     return res.send({
-      message: 'Project name is invalid. It should be a string'
+      message: 'Feature name is invalid. It should be a string'
     });
   }
 
   try {
-    await Project.create(req.body, (err, project) => {
+    await Feature.create(req.body, (err, feature) => {
       if (err) {
         res.status(500);
         return res.send({
@@ -36,7 +36,7 @@ exports.create = async (req, res) => {
       }
 
       res.status(201);
-      return res.json(project);
+      return res.json(feature);
     });
   } catch (error) {
     res.status(500);
@@ -46,15 +46,27 @@ exports.create = async (req, res) => {
   }
 };
 
-// search project
+// search feature
 exports.search = async (req, res) => {
   const {
     q
   } = req.params;
 
   try {
-    await Project.find()
-      .exec((err, projects) => {
+    await Feature.find()
+      .populate({
+        path: 'developer',
+        select: '-createdAt -updatedAt -__v -roles'
+      })
+      .populate({
+        path: 'manager',
+        select: '-createdAt -updatedAt -__v -roles'
+      })
+      .populate({
+        path: 'consultant',
+        select: '-createdAt -updatedAt -__v -roles'
+      })
+      .exec((err, features) => {
         if (err) {
           res.status(500);
           return res.send({
@@ -63,7 +75,7 @@ exports.search = async (req, res) => {
         }
 
         res.status(200);
-        return res.json(projects);
+        return res.json(features);
       });
   } catch (error) {
     res.status(500);
@@ -73,23 +85,23 @@ exports.search = async (req, res) => {
   }
 };
 
-// get project by Id
+// get feature by Id
 exports.read = async (req, res) => {
   const {
-    projectId
+    id
   } = req.params;
 
-  if (!Types.ObjectId.isValid(projectId)) {
+  if (!Types.ObjectId.isValid(id.toString())) {
     res.status(500);
     return res.send({
-      message: 'Invalid project id'
+      message: 'Invalid feature id'
     });
   }
 
   try {
-    await Project.find({
-      project: projectId
-    }, (err, project) => {
+    await Feature.find({
+      _id: req.params.id
+    }, (err, docs) => {
       if (err) {
         res.status(500);
         return res.send({
@@ -98,7 +110,7 @@ exports.read = async (req, res) => {
       }
 
       res.status(200);
-      return res.json(project);
+      return res.json(docs);
     });
   } catch (error) {
     res.status(500);
@@ -108,7 +120,7 @@ exports.read = async (req, res) => {
   }
 };
 
-// update a project
+// update a feature
 exports.update = async (req, res) => {
   if (!req.body) {
     res.status(500);
@@ -120,14 +132,14 @@ exports.update = async (req, res) => {
   if (!req.body.name) {
     res.status(500);
     return res.send({
-      message: 'Project name is missing.'
+      message: 'Feature name is missing.'
     });
   }
 
   if (typeof req.body.name !== 'string') {
     res.status(500);
     return res.send({
-      message: 'Project name is invalid. It should be a string'
+      message: 'Feature name is invalid. It should be a string'
     });
   }
 
@@ -136,7 +148,7 @@ exports.update = async (req, res) => {
   } = req.params;
 
   try {
-    await Project.updateOne({
+    await Feature.updateOne({
       _id: id
     }, (err, docs) => {
       if (err) {
@@ -157,7 +169,7 @@ exports.update = async (req, res) => {
   }
 };
 
-// delete a project
+// delete a feature
 exports.delete = async (req, res) => {
   const {
     id
@@ -166,12 +178,12 @@ exports.delete = async (req, res) => {
   if (!Types.ObjectId.isValid(id)) {
     res.status(500);
     return res.send({
-      message: 'Invalid project id'
+      message: 'Invalid feature id'
     });
   }
 
   try {
-    await Project.remove({
+    await Feature.remove({
       _id: id
     }, (err) => {
       if (err) {
@@ -183,7 +195,7 @@ exports.delete = async (req, res) => {
 
       res.status(200);
       return res.send({
-        message: 'Project deleted successfully'
+        message: 'Feature deleted successfully'
       });
     });
   } catch (error) {

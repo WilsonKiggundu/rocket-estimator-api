@@ -1,21 +1,46 @@
 import mongoose from 'mongoose';
 
-module.exports = mongoose.model(
-  'Project',
+export const Component = mongoose.model(
+  'Component',
   mongoose.Schema({
     name: {
       type: String,
-      required: true,
+      required: true
     },
 
     description: {
       type: String,
-      required: false,
+      required: true
     },
 
-    client: {
-      type: String,
+    project: {
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: 'Project'
+    }
+
+  }, {
+    timestamps: true,
+  })
+)
+
+export const Feature = mongoose.model(
+  'Feature',
+  mongoose.Schema({
+    name: {
+      type: String,
+      required: true
+    },
+
+    description: {
+      type: String,
+      required: false
+    },
+
+    component: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: false,
+      ref: 'Component'
     },
 
     developer: {
@@ -35,6 +60,29 @@ module.exports = mongoose.model(
       required: true,
       ref: 'Person',
     },
+  }, {
+    timestamps: true,
+  })
+)
+
+export const Project = mongoose.model(
+  'Project',
+  mongoose.Schema({
+    name: {
+      type: String,
+      required: true,
+    },
+
+    description: {
+      type: String,
+      required: false,
+    },
+
+    client: {
+      type: String,
+      required: true,
+    },
+
   }, {
     timestamps: true,
   }),
