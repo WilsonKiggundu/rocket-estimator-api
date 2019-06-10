@@ -35,14 +35,9 @@ exports.create = async (req, res) => {
 
 // search component
 exports.search = async (req, res) => {
-  const {
-    projectId
-  } = req.params;
 
   try {
-    await Interview.find({
-        project: projectId
-      })
+    await Interview.find()
       .exec((err, components) => {
         if (err) {
           res.status(500);
@@ -58,41 +53,6 @@ exports.search = async (req, res) => {
     res.status(500);
     return res.send({
       message: 'There is an error'
-    });
-  }
-};
-
-// get component by Id
-exports.read = async (req, res) => {
-  const {
-    id
-  } = req.params;
-
-  if (!Types.ObjectId.isValid(id.toString())) {
-    res.status(500);
-    return res.send({
-      message: 'Invalid component id'
-    });
-  }
-
-  try {
-    await Interview.find({
-      _id: req.params.id
-    }, (err, docs) => {
-      if (err) {
-        res.status(500);
-        return res.send({
-          message: err.message
-        });
-      }
-
-      res.status(200);
-      return res.json(docs);
-    });
-  } catch (error) {
-    res.status(500);
-    return res.send({
-      message: 'internal server error'
     });
   }
 };
